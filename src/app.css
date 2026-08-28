@@ -1,0 +1,43 @@
+:root {
+  --text: #2b2b2b;
+  --text-h: #0d0d0d;
+  --bg: #ffffff;
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font: 16px/1.5 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #d4d4d8;
+    --text-h: #f5f5f5;
+    --bg: #121212;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--text-h);
+  font-weight: 600;
+  margin: 0;
+}
+
+#app {
+  min-height: 100svh;
+}
