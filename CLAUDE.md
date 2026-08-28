@@ -28,24 +28,26 @@ A static, single-page site recapping a trip to Iceland. Built with Svelte.
 - Each day component takes the embed URL as an input/prop.
 
 ### Photos
-- Local photo files, dropped into the project by the user, organized per day.
-- Workflow: user pastes raw photos into `public/photos/inbox/`; they arrive pre-named like `Day 1 - Blue Lagoon.JPG`. Files get moved/renamed into `public/photos/day-N/lowercase-hyphenated.jpg` one day at a time (not all at once).
-- `Day N Route.png` screenshots and `Full Map.png` found in the inbox are reference-only for building the real Google Maps embed URL — they are never shown on the site.
-- Videos (.MP4) should eventually be included in galleries too; not yet implemented (Day 1 had none).
-- Each photo in a day's array has `src`, `alt`, and optional `caption` (see photo caption workflow above).
+- Local photo files, dropped into the project by the user, organized per day into `public/photos/day-N/lowercase-hyphenated.jpg` (or `.mp4` for video).
+- Workflow (used for all 7 days): user pastes raw photos into `public/photos/inbox/`; files get moved/renamed one day at a time, in-order captions assigned one-by-one, then files renamed again to match confirmed captions. `public/photos/inbox/` has since been deleted (was reference-only route screenshots, unused by the site) — recreate it if more days/photos are ever added.
+- Videos are supported in the gallery (see decision log) — ffmpeg-generated poster JPGs for thumbnails, real `<video>` playback in the lightbox.
+- Each photo in a day's array has `src`, `alt`, and optional `caption` (see photo caption workflow above) and `poster` (videos only).
+- All photos are compressed with ImageMagick before being committed (see decision log for exact command) — no full-resolution originals are kept anywhere in or out of the repo anymore (user explicitly deleted the `originals/` backup after confirming compression quality).
 
 ### Hosting / deployment
-- GitHub Pages.
+- GitHub Pages, custom subdomain `iceland.pinkoa2.lol` (domain registered at Porkbun).
+- Repo: `github.com/pinkoa2/trailmark-iceland-2026` (remote already configured, first commits pushed). Kept as `trailmark`-branded rather than renamed, per user's plan to later create a separate clean `trailmark` template repo for future trips.
+- Still TODO: GitHub Actions build/deploy workflow, `CNAME` file in the repo, custom domain set in repo's Pages settings, and the CNAME DNS record at Porkbun (`iceland` → `pinkoa2.github.io`).
 
 ## Tech stack decisions
 - Vite + Svelte (plain, not SvelteKit) — confirmed 2026-08-28. Project scaffolded via `npm create vite@latest`.
 - Svelte 5, Vite 8, Node v24.11.1 (v18+ required for Vite).
 
 ## Deferred / future work
-- Per-day loading state: instead of a single whole-page "please wait" overlay (rejected — would block on every photo across every day, bad for mobile), do a per-day loading overlay that waits only for that day's own photos/video posters before revealing that section. Revisit once all days are populated and real page weight is known.
+- Genericize `trailmark` into a clean, content-free template repo for future trips (e.g. Taiwan → `taiwan.pinkoa2.lol`), using GitHub's "template repository" feature. Deferred until the user actually starts the next trip — not needed for Iceland.
 
 ## Open questions / not yet decided
-- Number of days / itinerary content (titles, descriptions per day) — Days 1-3 done, Day 4 in progress, Day 5+ pending (day 6/7 gap still unresolved, deferred).
+- GitHub Pages deployment isn't finished yet — see Hosting / deployment above for the exact remaining steps.
 
 ## Decision log
 - 2026-08-28: Confirmed mobile is the primary viewing device — build mobile-first, verify on both phone and desktop.
@@ -82,3 +84,5 @@ A static, single-page site recapping a trip to Iceland. Built with Svelte.
 - 2026-08-28: User created the GitHub repo as `trailmark` (not `trailmark-iceland` or similar). Decision: keep it as `trailmark` for now holding the Iceland 2026 content; user will create a separate clean `trailmark` **template** repo later (GitHub's "template repository" feature) for future trips (e.g. Taiwan → `taiwan.pinkoa2.lol`) once they actually need it, rather than genericizing this repo preemptively. Branches were considered and ruled out for multi-trip hosting — GitHub Pages ties one custom domain to one deployed site per repo, so simultaneous live subdomains per trip need separate repos, not branches.
 - 2026-08-28: Local git repo initialized (`git init`, not yet committed/pushed). `.gitignore` updated to exclude `originals/` (100MB full-res photo backups — not needed in the repo since compressed versions are already in `public/`).
 - 2026-08-28: After confirming the compressed photos looked correct, permanently deleted (user-confirmed) `public/photos/inbox/` (unused route reference PNGs) and `originals/` (100MB full-res photo backups). No more full-resolution copies of the trip photos exist anywhere — only the compressed versions in `public/photos/`.
+- 2026-08-28: User created the GitHub repo (`pinkoa2/trailmark-iceland-2026`, SSH remote) and added it as `origin` themselves. First commit ("Add Iceland 2026 trip recap site") pushed to `main` — 63 files, all of `public/photos/` included (~42MB). `.gitignore` excludes `node_modules`, build output, and `originals/`.
+- 2026-08-28: Rewrote `README.md` — replaced the leftover default Vite/Svelte scaffold template README with actual project info (what it is, live URL, stack, how to run locally, project structure, the future-reuse plan). Committed and pushed.
